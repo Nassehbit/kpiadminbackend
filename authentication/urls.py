@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import RegistrationAPIView,LoginAPIView,UserRetrieveUpdateAPIView,ProfileRetrieveAPIView
 
-app_name='hub'
+app_name='authentication'
 
 urlpatterns= [
     path('user', UserRetrieveUpdateAPIView.as_view()),
