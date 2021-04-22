@@ -43,9 +43,11 @@ class LoginAPIView(APIView):
         # the registration endpoint. This is because we don't  have
         # anything to save. Instead, the `validate` method on our serializer
         # handles everything we need.
+        print("1111Fvsdcsdc")
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
-
+        print("Fvsdcsdc")
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
