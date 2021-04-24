@@ -61,8 +61,9 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'authentication.apps.AuthenticationConfig',
-    'apps.client',
+    'apps.client.apps.ClientConfig',
     'apps.vehicle_data.apps.VehicleDataConfig',
+    'apps.solicitedservices.apps.SolicitedservicesConfig',
     
     'corsheaders'
 ]

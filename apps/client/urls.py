@@ -3,7 +3,7 @@ from django.urls import path
 
 from .views import clientInformationAPI,ClientDataFilterAPI 
 
-app_name='authentication'
+app_name='client'
 
 urlpatterns= [
     path('client-ap/', clientInformationAPI.as_view()),
