@@ -7,5 +7,7 @@ app_name='authentication'
 
 urlpatterns= [
     path('vehicle-ap/', VehicleInformationAPI.as_view()),
+    
+
 ]
 

@@ -19,6 +19,7 @@ class ClientInformation(models.Model):
     delegation_municipality = models.CharField(max_length=1000)
     town = models.CharField(max_length=1000)
     rfc = models.CharField(max_length=1000)
+    joindate = models.DateTimeField(auto_now_add=True)
     served_by = models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name='client_user')
 
     def __str__(self):
