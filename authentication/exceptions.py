@@ -5,6 +5,7 @@ from rest_framework.exceptions import APIException
 class ProfileDoesNotExist(APIException):
     status_code = 400
     default_detail = 'The requested profile does not exist.'
+
     
 def core_exception_handler(exc, context):
     # If an exception is thrown that we don't explicitly handle here, we want

@@ -6,9 +6,9 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .exceptions import ProfileDoesNotExist
-from .serializers import RegistrationSerializer,LoginSerializer,UserSerializer,ProfileSerializer
+from .serializers import RegistrationSerializer,LoginSerializer,UserSerializer,ProfileSerializer,AllRolesSerializer
 
-from .models import Profile
+from .models import Profile,Roles
 
 # Create your views here.
 
@@ -101,5 +101,19 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
             raise ProfileDoesNotExist
 
         serializer = self.serializer_class(profile)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class AllRolesview(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AllRolesSerializer
+
+    def get(self, request):
+        try:
+            roles = Roles.objects.all()
+        except:
+            return Response({"message":"No data found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(roles,many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
