@@ -6,9 +6,9 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .exceptions import ProfileDoesNotExist
-from .serializers import RegistrationSerializer,LoginSerializer,UserSerializer,ProfileSerializer,AllRolesSerializer
+from .serializers import RegistrationSerializer,LoginSerializer,UserSerializer,ProfileSerializer,AllRolesSerializer,Userseriliz
 
-from .models import Profile,Roles
+from .models import Profile,Roles,User
 
 # Create your views here.
 
@@ -115,5 +115,30 @@ class AllRolesview(APIView):
             return Response({"message":"No data found"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.serializer_class(roles,many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TechnicianDeliveryAPI(APIView): #FOR CALCULATING THE ONTIME AND OUT OF TIME DELIVERY SERVICES
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Userseriliz
+
+    def get(self, request):
+        current_userid=request.user.id
+        print(current_userid)
+        # try:
+        #     vehicles = User.objects.filter(id=current_userid).all()
+        #     print('****************************************')
+        #     print(vehicles)
+        #     serializer = self.serializer_class(vehicles)
+        #     return Response(serializer.dat,status=status.HTTP_200_OK)
+        # except:
+        #     return Response({"message":"No data found"}, status=status.HTTP_404_NOT_FOUND)
+
+        vehicles = User.objects.get(id=current_userid)
+        print('****************************************')
+        print(vehicles)
+        serializer = self.serializer_class(vehicles)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

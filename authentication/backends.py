@@ -59,7 +59,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         # if we didn't decode these values.
         prefix = auth_header[0].decode('utf-8')
         token = auth_header[1].decode('utf-8')
-        print('looookinn')
+        # print('looookinn')
         print(token)
         if prefix.lower() != auth_header_prefix:
             # The auth header prefix is not what we expected. Do not attempt to

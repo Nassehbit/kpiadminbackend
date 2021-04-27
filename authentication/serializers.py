@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from .models import User,Profile,Roles
-
+from apps.vehicle_data.serializers import VehicleInformationSerializer
 class RegistrationSerializer(serializers.ModelSerializer):
     """Serializers registration requests and creates a new user."""
 
@@ -130,3 +130,14 @@ class  AllRolesSerializer(serializers.ModelSerializer):
     class Meta:
             model = Roles
             fields='__all__'
+
+class  Userseriliz(serializers.ModelSerializer):
+    """Handles serialization and deserialization of User objects."""
+    # email = serializers.CharField(max_length=255)
+    # username = serializers.CharField(max_length=255, read_only=True)
+    # password = serializers.CharField(max_length=128, write_only=True)
+    user_client =VehicleInformationSerializer (many=True,read_only=True)
+    # token = serializers.CharField(max_length=255, read_only=True)
+    class Meta:
+            model = User
+            fields=['user_client']
