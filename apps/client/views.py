@@ -22,11 +22,8 @@ class clientInformationAPI(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def post(self,request):
-        print(request.data['data'])
         data = request.data['data']
         data['served_by']=request.user.id
-        # res = ClientInformation.create_client(data)
-        # serializer = self.serializer_class(data=res)
 
         serializer=self.serializer_class(data=data)
         if serializer.is_valid(raise_exception=True):

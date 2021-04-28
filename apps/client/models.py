@@ -10,7 +10,7 @@ class ClientInformation(models.Model):
     nationality = models.CharField(max_length=1000)
     age = models.IntegerField()
     email =models.EmailField(max_length = 500)
-    phone =models.IntegerField()
+    phone =models.CharField(max_length=30,blank=True,null=True)
 
     street = models.CharField(max_length=1000)
     internal_number = models.IntegerField()

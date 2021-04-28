@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import( 
-    RegistrationAPIView,LoginAPIView,UserRetrieveUpdateAPIView,ProfileRetrieveAPIView,AllRolesview,TechnicianDeliveryAPI
+    RegistrationAPIView,LoginAPIView,UserRetrieveUpdateAPIView,ProfileRetrieveAPIView,AllRolesview,TechnicianDeliveryAPI,
+    TechnicianReviewAverageAPI,AllTechnicianAPI,TechnicianAverageGasolineAPI
     )
 
 app_name='authentication'
@@ -14,5 +15,10 @@ urlpatterns= [
     path('roles/',AllRolesview.as_view()),
 
     path('techniciandeliveryreport/',TechnicianDeliveryAPI.as_view()), 
+    path('technicianreviewaverage/',TechnicianReviewAverageAPI.as_view()), 
+
+     path('alltechnicians/',AllTechnicianAPI.as_view()), 
+      path('technicianaveragegasoline/',TechnicianAverageGasolineAPI.as_view()), 
      
+
 ]

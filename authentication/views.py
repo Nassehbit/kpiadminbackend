@@ -6,9 +6,12 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .exceptions import ProfileDoesNotExist
-from .serializers import RegistrationSerializer,LoginSerializer,UserSerializer,ProfileSerializer,AllRolesSerializer,Userseriliz
+from .serializers import(
+     RegistrationSerializer,LoginSerializer,UserSerializer,
+     ProfileSerializer,AllRolesSerializer,Userseriliz,AllTechnicianSerializer)
 
 from .models import Profile,Roles,User
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -118,6 +121,19 @@ class AllRolesview(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class AllTechnicianAPI(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AllTechnicianSerializer
+
+    def get(self, request):
+        try:
+            roles = User.objects.filter(role_id=2).all()
+        except:
+            return Response({"message":"No data found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.serializer_class(roles,many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TechnicianDeliveryAPI(APIView): #FOR CALCULATING THE ONTIME AND OUT OF TIME DELIVERY SERVICES
     permission_classes = (IsAuthenticated,)
@@ -126,19 +142,109 @@ class TechnicianDeliveryAPI(APIView): #FOR CALCULATING THE ONTIME AND OUT OF TIM
     def get(self, request):
         current_userid=request.user.id
         print(current_userid)
-        # try:
-        #     vehicles = User.objects.filter(id=current_userid).all()
-        #     print('****************************************')
-        #     print(vehicles)
-        #     serializer = self.serializer_class(vehicles)
-        #     return Response(serializer.dat,status=status.HTTP_200_OK)
-        # except:
-        #     return Response({"message":"No data found"}, status=status.HTTP_404_NOT_FOUND)
+        finalobject=[]
+        all_users = User.objects.filter(role_id=2).all()
+        
+        for user in all_users:
+            
+            vehicles = User.objects.get(id=user.id).user_client.filter(status='completed').all()
+            counter = {'services_on_Time':0,'services_out_of_time':0}
+            for vehicle in vehicles:
+                
+                if vehicle.proposed_departure_date < vehicle.actual_delivery_date:
+                    print('late!!!!!')
+                    counter['services_out_of_time']+=1
+                else:
+                    # print(counter.services_on_Time)
+                    counter['services_on_Time']+=1
+                    print('huraaay!@')
+                print (vehicle.status)
+            print(counter)
+            user_obj ={user.username:counter} 
+            finalobject.append(user_obj)
+      
+            print('****************************************')
+            
+            print(vehicles)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^666666')
+        print(finalobject)
+        # serializer = self.serializer_class(vehicles)
+        return JsonResponse({'data':finalobject},status=status.HTTP_200_OK)
 
-        vehicles = User.objects.get(id=current_userid)
-        print('****************************************')
-        print(vehicles)
-        serializer = self.serializer_class(vehicles)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TechnicianReviewAverageAPI(APIView): #FOR CALCULATING THE AVERAGE QUALIFICATION FOR EVERYTECHNICIAN FROM THE REVIEWS FIRST QUESTION
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Userseriliz
+
+    def get(self, request):
+        current_userid=request.user.id
+        print(current_userid)
+        finalobject=[]
+        all_users = User.objects.filter(role_id=2).all()
+        
+        for user in all_users:
+            
+            all_reviews = User.objects.get(id=user.id).user_review.all()
+            # counter = {'services_on_Time':0,'services_out_of_time':0}
+            print()
+            total_reviews = len(all_reviews) * 10
+            received_reviews =0
+            for review in all_reviews:
+                received_reviews+=float(review.technicians_attention)
+              
+                # print (review)
+            try:
+                average_rating =(received_reviews *100)/total_reviews
+            except ZeroDivisionError:
+                average_rating =0
+
+            user_obj =[user.username,average_rating]
+            finalobject.append(user_obj)
+      
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^666666')
+        print(finalobject)
+        # serializer = self.serializer_class(vehicles)
+        return JsonResponse({'data':finalobject},status=status.HTTP_200_OK)
+
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+class TechnicianAverageGasolineAPI(APIView): 
+    """
+    Compare Liters of Gasoline in Tank from "Technician Form 1" with Liters of Gasoline Left from "Technician Form 2"
+    and calculate the fuel  average that a technician use per service (in a week)
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Userseriliz
+
+    def get(self, request):
+        current_userid=request.user.id
+        print(current_userid)
+        finalobject=[]
+        all_users = User.objects.filter(role_id=2).all()
+        
+        for user in all_users:
+            
+            vehicles = User.objects.get(id=user.id).user_client.filter(status='completed').all()
+            initial_total_amount_of_gasoline = 0
+            final_amount_of_gasoline = 0
+            for vehicle in vehicles:
+               initial_total_amount_of_gasoline +=float(vehicle.liters_of_gasoline_on_arrival)
+               final_amount_of_gasoline +=float(vehicle.liters_of_gasoline_on_departure)
+            try:
+                average_usage_of_gasoline=100 - ((final_amount_of_gasoline*100)/initial_total_amount_of_gasoline)
+            except ZeroDivisionError:
+                average_usage_of_gasoline =0
+            
+            user_obj =[user.username,average_usage_of_gasoline]
+            finalobject.append(user_obj)
+      
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^666666')
+        print(finalobject)
+        # serializer = self.serializer_class(vehicles)
+        return JsonResponse({'data':finalobject},status=status.HTTP_200_OK)
+
+        # return Response(serializer.data, status=status.HTTP_200_OK)

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'apps.client.apps.ClientConfig',
     'apps.vehicle_data.apps.VehicleDataConfig',
     'apps.solicitedservices.apps.SolicitedservicesConfig',
+    'apps.review.apps.ReviewConfig',
     
     'corsheaders'
 ]

@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/client/',include('apps.client.urls')),
     path('api/vehicle/',include('apps.vehicle_data.urls')),
     path('api/solicited/',include('apps.solicitedservices.urls')),
+    path('api/review/',include('apps.review.urls')),
 ]

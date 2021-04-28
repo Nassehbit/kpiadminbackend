@@ -131,6 +131,13 @@ class  AllRolesSerializer(serializers.ModelSerializer):
             model = Roles
             fields='__all__'
 
+class  AllTechnicianSerializer(serializers.ModelSerializer):
+    """Handles serialization and deserialization of User objects."""
+
+    class Meta:
+            model = User
+            fields = ['email', 'username', 'id']
+
 class  Userseriliz(serializers.ModelSerializer):
     """Handles serialization and deserialization of User objects."""
     # email = serializers.CharField(max_length=255)
